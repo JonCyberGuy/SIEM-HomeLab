@@ -41,7 +41,7 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <br />
 <br />
 <p align="center">
-<b></b>At this point in the VM creation process I need to make sure that I create a new Resource Group that all of my future resources will be under. A resource group in Azure is a logical grouping of tools, services, configurations and more that exist under one banner so they can be created and deleted at the same time (they share the same lifespan). If I have resources outside of a particular resource group, if I delete that resource group the ones outside of it will still exist. It makes it easier to manage your resources if they're all in the same place. I decided to name this resource group "HoneyPot_Lab" and I name the virtual machine "HoneyPot-VM".
+<b>At this point in the VM creation process I need to make sure that I create a new Resource Group that all of my future resources will be under. A resource group in Azure is a logical grouping of tools, services, configurations and more that exist under one banner so they can be created and deleted at the same time (they share the same lifespan). If I have resources outside of a particular resource group, if I delete that resource group the ones outside of it will still exist. It makes it easier to manage your resources if they're all in the same place. I decided to name this resource group "HoneyPot_Lab" and I name the virtual machine "HoneyPot-VM".</b>
 <br/>
 </p>
 
