@@ -231,10 +231,14 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b></b> <br/>
+<b></b>Now I have to go in and actually extract the fields my log uses. This will allow me to later use those fields in Microsoft Sentinel. I right click a failed rdp login log that has all the raw data in it from my PowerShell script and highlight the data I want. I then name the field that data is going to be in. Once that extraction happens, the Log Analytics AI looks at all of my other sample data and actual logs that were generated and sees if it can pull the correct data. This part is where I have to go in and correct any errors the AI has but again highlighting the correct data point it needs to look for.<br/>
 </p>
 
-![Old_Firefox_Scan](https://user-images.githubusercontent.com/108043108/177890872-ed890db9-a15d-4de9-b3b3-6723dd161f22.JPG)
+![Extract_Fields](https://user-images.githubusercontent.com/108043108/225436517-0a82f48e-82c8-45cf-b351-634ee8ba41c7.JPG)
+![extract_data_2](https://user-images.githubusercontent.com/108043108/225436525-d57e194f-8a55-4e9a-915b-9d8a413a83e4.JPG)
+![extract_data_3](https://user-images.githubusercontent.com/108043108/225436533-e68158a6-3cd5-4f84-a6b2-1329a1339016.JPG)
+![extract_data_4](https://user-images.githubusercontent.com/108043108/225436540-4ec75b85-8076-493e-9fb7-8c5bc24cba4b.JPG)
+
 
 <br />
 <br />
