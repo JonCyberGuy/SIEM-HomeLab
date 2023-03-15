@@ -200,33 +200,38 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>After the scan is properly configured with the right credentials, I run it again.</b> <br/>
+<b>Now that I know my PowerShell script is working as it should, I head over to Log Analytics Workbooks to create a custom log so that I can bring my failed_rdp log into Log Analytics. In Log Analytics I navigate to my VM and create a Legacy Custom Log. It asks for a sample log, which is inside the VM. I can't download the logfile from the VM to my native computer, so I have to open the logfile inside the VM, copy the contents, go back to my native computer and open Notepad, paste the copied contents in and save the file to my desktop. From there I can import it into Log Analytic Workbooks. This sample data will be used to train Log Analytics.</b> <br/>
 </p>
 
-![Run_The_Scan_Again](https://user-images.githubusercontent.com/108043108/177890377-b412d84a-d8e2-40da-9995-dddbd3c4d388.JPG)
+![Custom_Logs](https://user-images.githubusercontent.com/108043108/225421446-5a0c5c4f-62a0-4a07-bb6a-b36edd43b7fd.JPG)
+![Custom_Log_2](https://user-images.githubusercontent.com/108043108/225421932-a4d520b3-5f9a-4851-badb-e07744735144.JPG)
+![Custom_Log_3](https://user-images.githubusercontent.com/108043108/225421947-dcaadf65-e212-41ae-8e83-322a310df6f7.JPG)
+![Custom_Log_4](https://user-images.githubusercontent.com/108043108/225421956-8dd57a76-b0b0-44a0-8f10-675ba6b1dfa9.JPG)
+![Custom_Log_5](https://user-images.githubusercontent.com/108043108/225421995-664b1d05-5ba7-48a3-9e90-a1c5eedeed36.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>This new scan has given us a lot more vulnerabilities than the first one because it is able to scan deeper into the VM due to having credentials. The top picture is the new credentialed scan and the bottom picture is from the first non-credentialed scan. Most of the vulnerabilities found is probably because the version of Windows 10 this VM is running is not up to date.</b> <br/>
+<b>Next it asks for the collection path. The collection path is where the log actually lives in the VM, so it is asking for a path that Log Analytics can take to reach that logfile. The path to that file is C:\ProgramData\failed_rdp.log. If this path is wrong, Log Analytics wouldn't be able to collect the log information. Next we have to name our custom log. I decided to name it FAILED_RDP_WITH_GEO and the .CL (Custom Log) will automatically be appended to it. When querying the database later this will basically be the name of the table. We then create the custom log.</b> <br/>
 </p>
 
-![new_scan_properly_credentialed](https://user-images.githubusercontent.com/108043108/177890582-7f4d0eec-3b5f-4a5f-b708-47b3ccfb5d83.JPG)
-
-![Old_scan_not_credentialed](https://user-images.githubusercontent.com/108043108/177890589-e4e882ab-6733-4930-ad4c-1115a2c620b3.JPG)
+![Custom_Log_6](https://user-images.githubusercontent.com/108043108/225422804-46df9880-9734-420c-84a9-e18ec3a68b57.JPG)
+![Custom_Log_7](https://user-images.githubusercontent.com/108043108/225423680-580feffc-72e3-4eaf-9fd0-57d0376976b3.JPG)
+![Custom_Log_8](https://user-images.githubusercontent.com/108043108/225424273-b392d383-4025-4206-b406-0fd79058d263.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>I want to see how powerful this Nessus Scanner is so I'm going to download a very old version of Firefox which probably has many vulnerabilities and see if Nessus can discover them (I'm sure it will.)</b><br/>
+<b> While that is creating, which the creation will be instant, but the data won't be synced from the VM to Log Analytics for a while. I decide to query the Event Viewer, which should have already been synced. You can see in picture 1 that it is indeed showing all the logs. After a little while I decide to query the newly created FAILED_RDP_WITH_GEO custom log, and it is indeed showing information meaning that the VM and Log Analytics as synced and is sending/receiving data.</b><br/>
 </p>
 
-![downloading_an_old_version_of_firefox](https://user-images.githubusercontent.com/108043108/177890787-5cd80be3-99a1-40a4-bddc-feb06ea9cda7.JPG)
+![Security_Event_4625](https://user-images.githubusercontent.com/108043108/225425000-75d4b1ae-fa60-48a4-af30-8fc5ab52cb8f.JPG)
+![Failed_RDP_LOGS](https://user-images.githubusercontent.com/108043108/225425211-162958fe-13cb-455a-99bf-2b24897a5a29.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>After a deprecated version of Firefox is downloaded, I run another scan. We can see many new alerts and vulnerabilities just from Firefox! 68 Critical!</b> <br/>
+<b></b> <br/>
 </p>
 
 ![Old_Firefox_Scan](https://user-images.githubusercontent.com/108043108/177890872-ed890db9-a15d-4de9-b3b3-6723dd161f22.JPG)
