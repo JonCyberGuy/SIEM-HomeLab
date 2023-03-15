@@ -1,7 +1,7 @@
 <h1>Microsoft Sentinel Live Attack Demonstration Home Lab</h1>
 
 <h2>Description</h2>
-<b>This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Microsoft Sentinel. This project will showcase the use of a few different tools and resources. I will be using PowerShell to scan EventViewer in the exposed VM, specifically EventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address from any failed logons to IPgeolocation.io via an API, so later that information can be used Microsoft Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, API's, and Microsoft Azure.I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.<b/>
+<b>This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Microsoft Sentinel. This project will display the use of a few different tools and resources. I will be using PowerShell to scan Event Viewer in the exposed VM, specifically EventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address of any failed logons to IPgeolocation.io via an API, so later that information can be used Microsoft Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, APIs, and Microsoft Azure. I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.<b/>
 <br />
 
 <h2>Utilities Used</h2>
@@ -24,7 +24,7 @@
 <h2 align="center">Program walk-through</h2>
 
 <p align="center">
-<b>The first thing I am going to do is create a Microsoft Azure account, this will be the cloud environment I'll use to provision my resources. I will take advantage of the $200 credit I'll receive to do this project. The resources I'm using are not very resource heavy, so my credit can be used towards future projects. Also included is a the website I'll be using for my IP geolocation data.</b> <br/>
+<b>The first thing I am going to do is create a Microsoft Azure account, this will be the cloud environment I'll use to provision my resources. I will take advantage of the $200 credit I'll receive to do this project. The resources I'm using are not very resource heavy, so my credit can be used towards future projects. Also included is the website I will be using for my IP geolocation data. </b> <br/>
 </p>
 
 ![Create_Azure_Subscription](https://user-images.githubusercontent.com/108043108/225348757-c41744df-2be1-4ffc-87a6-aa258a4102ef.JPG)
@@ -34,7 +34,7 @@
 <br />
 <br />
 <p align="center">
-<b>The next thing I'll do is start the process of creating my virtual machines. Provisioning a VM can be a long process so while I move on to the next step, my VM can be provisioned in the background.</b> <br/>
+<b>The next thing I'll do is start the process of creating my virtual machines. Provisioning a VM can be a lengthy process so while I move on to the next step, my VM can be provisioned in the background.</b> <br/>
 </p>
 
 ![Create_VM](https://user-images.githubusercontent.com/108043108/225350437-f6fc6e29-6821-48d5-a379-2099477589ae.JPG)
@@ -52,7 +52,7 @@
 <br />
 <br />
 <p align="center">
-<b>I scroll down on that same page and I now have to choose the size of the VM I'm going to provision. In the photo I initially chose Standard_B1s, as circled in green. Later on I decided to upgrade it to Standard_B2s which gave 2 CPU cores instead of 1 and more RAM. The first one I chose was just too slow. PowerShell kept crashing and the VM was lagging a lot. After choosing the size of the VM I create the Admin account. I chose a unique admin name and a 30 character password made up of special characters, numbers, and a mix of lowercase and uppercase letters. Since I knew people would be trying to log into the exposed VM, most likely through brute forcing and dictionary attacks a strong password was a necessity. The public inbound port rules, essentially which ports will be open to be able to connect to the VM. At this step you can set mutltiple authentication methods like SSH but I chose to only allow RDP. RDP uses port 3389.</b> <br/>
+<b>I scroll down on that same page, and I now must choose the size of the VM I am going to provision. In the photo I initially chose Standard_B1s, as circled in green. Later I decided to upgrade it to Standard_B2s which gave 2 CPU cores instead of 1 and more RAM. The first one I chose was just too slow. PowerShell kept crashing and the VM was lagging a lot. After choosing the size of the VM, I created the admin account. I chose a unique admin name and a 30-character password made up of special characters, numbers, and a mix of lowercase and uppercase letters. Since I knew people would be trying to log into the exposed VM through brute forcing and dictionary attacks, a strong password was a necessity. The public inbound port rules, essentially which ports will be open to be able to connect to the VM. At this step you can set multiple authentication methods like SSH, but I chose to only allow RDP. RDP uses port 3389.</b> <br/>
 </p>
 
 ![Create_VM_3](https://user-images.githubusercontent.com/108043108/225365594-cf2fe158-d887-4bf9-aca6-d423019404a6.jpg)
@@ -60,7 +60,7 @@
 <br />
 <br />
 <p align="center">
-<b>The next step is to create a new Network Security Group (NSG). An NSG is basically a Firewall that can create and enforce rules on inbound and outbound traffic to Azure resources. For this project we don't want any rules on traffic. We want to allow anyone and everyone to be able to communicate with the honeypot VM. There is a default inbound rule, so we'll delete that one and create a new inbound rule that will allow EVERYTHING into the VM. On the Destination Port Ranges box I wrote an asterisk (*) for Anything. This will allow for any port ranges. We'll allow any protocol. For Priority, I set it at 100 because the lower the number the higher the priority. So if there is a rogue rule somewhere, this rule will have priority over it. With these rules set it will allow any and all traffic into our VM. I would NEVER EVER do this in a real production environment.</b> <br/>
+<b>The next step is to create a new Network Security Group (NSG). An NSG is basically a Firewall that can create and enforce rules on inbound and outbound traffic to Azure resources. For this project we don't want any rules on traffic. We want to allow anyone and everyone to be able to communicate with the honeypot VM. There is a default inbound rule, so we'll delete that one and create a new inbound rule that will allow EVERYTHING into the VM. On the Destination Port Ranges box, I wrote an asterisk (*) for Anything. This will allow for any port ranges. We'll allow any protocol. For Priority, I set it at 100 because the lower the number the higher the priority. So if there is a rogue rule somewhere, this rule will have priority over it. With these rules set it will allow any and all traffic into our VM. I would NEVER EVER do this in a real production environment.</b> <br/>
 </p>
 
 ![Networking_NSG_1](https://user-images.githubusercontent.com/108043108/225353983-66d6e530-783f-4db8-9720-23e575719b5f.JPG)
@@ -89,7 +89,7 @@
 <br />
 <br />
 <p align="center">
-<b>I now go into Microsoft Defender for Cloud. I do this because I have to provision enroll in some plans to be able to collect and aggregate data for Microsoft Sentinel to be able to use later on. I also need to connect my HoneyPot-VM to Microsoft Defender so it can collect data. At this point my VM has been created so it can be connected to these services. We call these Data Connectors. In the third picture I only turn on the plans for Foundational CSPM and Servers. I'm not running any SQL servers so it doesn't need to be turned on.</b> <br/>
+<b>I now go into Microsoft Defender for Cloud. I do this because I have to provision enroll in some plans to be able to collect and aggregate data for Microsoft Sentinel to be able to use later on. I also need to connect my HoneyPot-VM to Microsoft Defender so it can collect data. At this point my VM has been created so it can be connected to these services. We call these Data Connectors. In the third picture I only turn on the plans for Foundational CSPM and Servers. I'm not running any SQL servers, so it doesn't need to be turned on.</b> <br/>
 </p>
 
 ![Microsoft_Defender](https://user-images.githubusercontent.com/108043108/225375649-d2e6bfc2-92d7-4193-af26-3526bf646744.JPG)
@@ -119,7 +119,7 @@
 <br />
 <br />
 <p align="center">
-<b>Now that everything is set up in the Azure dashboard, I can go into my VM and set setting things up there. The first thing I need to do is get my VM's public IP address so I can Remote Desktop (RDP) into it. I go into the Virtual Machines tab in Azure and navigate into the HoneyPot VM. Highlighted in my VM's Public IP.</b> <br/>
+<b>Now that everything is set up in the Azure dashboard, I can go into my VM and set things up there. The first thing I need to do is get my VM's public IP address so I can Remote Desktop (RDP) into it. I go into the Virtual Machines tab in Azure and navigate into the HoneyPot VM. Highlighted in my VM's Public IP.</b> <br/>
 </p>
 
 ![Getting_VM_Public_IP](https://user-images.githubusercontent.com/108043108/225379998-5bcad4c5-c878-4249-8384-34e1581dc35d.JPG)
@@ -164,7 +164,7 @@
 <br />
 <br />
 <p align="center">
-<b>Now that my VM is exposed to the internet I can begin the setup of my PowerShell script. It is the heart of this project. This PowerShell script will parse Event Viewer specifically looking for EventID 4625. It will then send the IP address from the failed logon attempts to the website IPgeolocation.io via an API. The reason I did this is because the IP address in event viewer does not contain any geographical location. It was easier to send the data to a system dedicated to pulling that information out and sending it back to myself rather than building it from scratch. The PowerShell script will then receive all that georgraphical data and save it as a string in a logfile named failed_rdp.log. I will use this logfile later on in the project to be able to map the attacks live in Microsoft Sentinel.</b> <br/>
+<b>Now that my VM is exposed to the internet I can begin the setup of my PowerShell script. It is the heart of this project. This PowerShell script will parse Event Viewer specifically looking for EventID 4625. It will then send the IP address from the failed logon attempts to the website IPgeolocation.io via an API. The reason I did this is because the IP address in event viewer does not contain any geographical location. It was easier to send the data to a system dedicated to pulling that information out and sending it back to myself rather than building it from scratch. The PowerShell script will then receive all that geographical data and save it as a string in a logfile named failed_rdp.log. I will use this logfile later on in the project to be able to map the attacks live in Microsoft Sentinel.</b> <br/>
 </p>
 
 ![Create_PS_Script](https://user-images.githubusercontent.com/108043108/225409638-0f9735a1-eca0-446f-afb7-74ef0d427ebf.JPG)
@@ -173,7 +173,7 @@
 <br />
 <br />
 <p align="center">
-<b>After I open PowerShell I paste my previously written script. I then save that script to the desktop as Log_Exporter</b> <br/>
+<b>After I open PowerShell, I paste my script that was written before the start of this project. I then save that script to the desktop as Log_Exporter</b> <br/>
 </p>
 
 ![Create_PS_Script_2](https://user-images.githubusercontent.com/108043108/225410802-01a83b34-e79a-4516-8bdb-70c01baa76d7.JPG)
@@ -182,7 +182,7 @@
 <br />
 <br />
 <p align="center">
-<b>I run my Log_Exporter script. So that it was easier to read I made it so that the script outputs in pink and black. The API_KEY you see has been changed after I finished the project. In the first photo you can see that my script is working just fine. The output you see is the first failed login that I did earlier. The second photo is showing how the data is saved into the failed_rdp logfile in string format. I included some sample data in this file because later on it will be needed to train the AI in Log Analytics Workbooks and Microsoft Sentinel. More data equals more precision.</b> <br/>
+<b>I run my Log_Exporter script. So that it was easier to read I made it so that the script outputs in pink and black. The API_KEY you see has been changed after I finished the project. In the first photo you can see that my script is working just fine. The output you see is the first failed login that I did earlier. The second photo shows how the data is saved into the failed_rdp logfile in string format. I included some sample data in this file because later it will be needed to train the AI in Log Analytics Workbooks and Microsoft Sentinel. More data equals more precision.</b> <br/>
 </p>
 
 ![Run_PS_Script](https://user-images.githubusercontent.com/108043108/225412357-ee390c08-c131-4658-b6d0-b2c6f0485850.JPG)
@@ -191,7 +191,7 @@
 <br />
 <br />
 <p align="center">
-<b>At this point to test if the PowerShell script is working, I failed another logon attempt. As you can see someone has already found my VM and started to try and bruteforce it. This person was in Tunisia. They found it so fast, it was a bit annoying. I could have blocked his IP or enabled the firewall again until I was finished completely with my setup but this data was perfect to train the AI in Azure, so I let it go at the time. In hindsight it was a bad move. The free API from IPgeolocation.io only allowed for 1000 calls. This person in Tunisia hit that limit very quickly, ruining my project. I had to pay $15 for an extra 150k API calls to save my project.</b> <br/>
+<b>At this point to test if the PowerShell script is working, I failed another logon attempt. As you can see someone has already found my VM and started to try and brute force it. This person was in Tunisia. They found it so fast, it was a bit annoying. I could have blocked his IP or enabled the firewall again until I was finished completely with my setup, but this data was perfect to train the AI in Azure, so I let it go at the time. In hindsight it was a bad move. The free API from IPgeolocation.io only allowed for 1000 calls. This person in Tunisia hit that limit very quickly, ruining my project. I had to pay $15 for an extra 150k API calls to save my project. </b> <br/>
 </p>
 
 ![Showing_PS_Script_Someone_Already_Found_VM](https://user-images.githubusercontent.com/108043108/225413356-343d9ae2-240d-4841-b41f-62cff77e51ab.JPG)
@@ -213,7 +213,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>Next it asks for the collection path. The collection path is where the log actually lives in the VM, so it is asking for a path that Log Analytics can take to reach that logfile. The path to that file is C:\ProgramData\failed_rdp.log. If this path is wrong, Log Analytics wouldn't be able to collect the log information. Next we have to name our custom log. I decided to name it FAILED_RDP_WITH_GEO and the .CL (Custom Log) will automatically be appended to it. When querying the database later this will basically be the name of the table. We then create the custom log.</b> <br/>
+<b>Next it asks for the collection path. The collection path is where the log lives in the VM, so it asks for a path that Log Analytics can take to reach that logfile. The path to that file is C:\ProgramData\failed_rdp.log. If this path is wrong, Log Analytics wouldn't be able to collect the log information. Next, we have to name our custom log. I decided to name it FAILED_RDP_WITH_GEO and the .CL (Custom Log) will automatically be appended to it. When querying the database later this will basically be the name of the table. We then create the custom log. </b> <br/>
 </p>
 
 ![Custom_Log_6](https://user-images.githubusercontent.com/108043108/225422804-46df9880-9734-420c-84a9-e18ec3a68b57.JPG)
@@ -223,7 +223,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>While that is creating, which the creation will be instant, but the data won't be synced from the VM to Log Analytics for a while. I decide to query the Event Viewer, which should have already been synced. You can see in picture 1 that it is indeed showing all the logs. After a little while I decide to query the newly created FAILED_RDP_WITH_GEO custom log, and it is indeed showing information meaning that the VM and Log Analytics as synced and is sending/receiving data.</b><br/>
+<b>While that is being provisioned, the creation will be instant, but the data won't be synced from the VM to Log Analytics for a while. I decided to query the Event Viewer, which should have already been synced. You can see in picture 1 that it is indeed showing all the logs. After a little while I decided to query the newly created FAILED_RDP_WITH_GEO custom log, and it is indeed showing information meaning that the VM and Log Analytics as synced and is sending/receiving data. </b><br/>
 </p>
 
 ![Security_Event_4625](https://user-images.githubusercontent.com/108043108/225425000-75d4b1ae-fa60-48a4-af30-8fc5ab52cb8f.JPG)
@@ -244,7 +244,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>I wait a little while to see if the fields would populate properly. They all do except sourcehost.CL and I couldn't figure out why. I deleted that field and extracted it multiple times but no matter what I did it would not populate. I could not use an unpopulated field in my sentinel live map, so in the end I decided to delete it and not use that data point at all.</b>  <br/>
+<b>I waited a little while to see if the fields would populate properly. They all do except sourcehost.CL and I couldn't figure out why. I deleted that field and extracted it multiple times but no matter what I did it would not populate. I could not use an unpopulated field in my sentinel live map, so in the end I decided to delete it and not use that data point at all.</b>  <br/>
 </p>
 
 ![Sourcehost_wouldnt_update](https://user-images.githubusercontent.com/108043108/225451005-edabe896-94b1-4d11-8853-42e4a4ce8e83.JPG)
@@ -261,7 +261,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>Moving on. To create the map I want I'll need to create a new workbook in Sentinel. After clicking into workbooks, there is some default graphs or widgets in there. I want to delete those. After deleting those I then get started on creating a new workbook.</b>  <br/>
+<b>Moving on. To create the map, I want I'll need to create a new workbook in Sentinel. After clicking into workbooks, there is some default graphs or widgets in there. I want to delete those. After deleting those I then get started on creating a new workbook.</b>  <br/>
 </p>
 
 ![setting_geomap_2](https://user-images.githubusercontent.com/108043108/225452457-2c805584-bee1-4c4b-adb3-aa73726c0d0f.JPG)
@@ -271,7 +271,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>To create the map I need to add a query. Remember, I need to query the data and the fields from Log Analytics. Basically I'm pointing out the dataset I want Microsoft Sentinel to use. In the query I tell it to specifically exclude (!=) the data points that include "Samplehost" since those aren't real attacks and I don't want them to populate on the map. </b>  <br/>
+<b>To create the map, I need to add a query. Remember, I need to query the data and the fields from Log Analytics. Basically I'm pointing out the dataset I want Microsoft Sentinel to use. In the query I tell it to specifically exclude (!=) the data points that include "Samplehost" since those aren't real attacks and I don't want them to populate on the map.</b>  <br/>
 </p>
 
 ![setting_geomap_5](https://user-images.githubusercontent.com/108043108/225453225-24b50358-ac8c-4897-9e44-8d21f4075239.JPG)
@@ -279,7 +279,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>After I queried the data points I want, I now have to choose how I want to express/visualize them. In this case I want them visualized as a map! I choose the map setting and then configure the map to plot the attacks by latitude/longitude. I could do it by country but some of the attacks coming through was not including the country. I change the metric settings to make the bubbles bigger using the event counts. The more events the bigger the bubble. I apply the settings and my map is done!</b>  <br/>
+<b>After I queried the data points I want, I now have to choose how I want to express/visualize them. In this case I want them visualized as a map! I choose the map setting and then configure the map to plot the attacks by latitude/longitude. I could do it by country but some of the attacks coming through was not including the country. I changed the metric settings to make the bubbles bigger using the event counts. The more events the bigger the bubble. I apply the settings and my map is done!</b>  <br/>
 </p>
 
 ![setting_geomap_6](https://user-images.githubusercontent.com/108043108/225453707-62496864-0c33-4d3d-988c-3260b07e9c9b.JPG)
@@ -290,7 +290,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>After a few hours and right before I decided to stop the project, you can see that there was a total of 10,529 attacks or failed login attempts. 20 were in the USA which was me testing the PowerShell script, 9 from Cambodia, and a whopping 10.5k from Tunisia. They were using automated brute-forcing software to try thousands of different password combinations and usernames. There was even more attempts but my PowerShell script had to be stopped and started multiple times. This is why it's important to use strong passwords and uncommon usernames! The second picture is the number of API calls I had that day. All of them are not shown because I had to upgrade the number of calls I could make.</b>  <br/>
+<b>After a few hours and right before I decided to stop the project, you can see that there was a total of 10,529 attacks or failed login attempts. 20 were in the USA, which was me testing the PowerShell script, 9 from Cambodia, and a whopping 10.5k from Tunisia. They were using automated brute-forcing software to try thousands of different password combinations and usernames. There were even more attempts, but my PowerShell script had to be stopped and started multiple times. This is why it's important to use strong passwords and uncommon usernames! The second picture is the number of API calls I had that day. All of them are not shown because I had to upgrade the number of calls I could make. </b>  <br/>
 </p>
 
 ![Stopped_Because_of_API_Calls_Limit_At_150k](https://user-images.githubusercontent.com/108043108/225454550-20b2f3d6-5593-44cf-8bbc-290fb941da8c.JPG)
@@ -299,7 +299,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>After I was done I had to delete the resource group I created for this project. If I left it alone, it would eat up my $200 credit I would need for future projects. The reason I put everything under one resource group is for this exact reason, easier deletion of the resources I created. Now nothing would be left behind.</b>  <br/>
+<b>After I was done, I had to delete the resource group I created for this project. If I left it alone, it would eat up my $200 credit I would need for future projects. The reason I put everything under one resource group is for this exact reason, easier deletion of the resources I created. Now nothing would be left behind.</b>  <br/>
 </p>
 
 ![Deleting_Resources](https://user-images.githubusercontent.com/108043108/225455713-94e78229-b9ec-4f2e-ae17-24ed2636f7a1.jpg)
