@@ -273,8 +273,6 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <b>To create the map I need to add a query. Remember, I need to query the data and the fields from Log Analytics. Basically I'm pointing out the dataset I want Microsoft Sentinel to use. In the query I tell it to specifically exclude (!=) the data points that include "Samplehost" since those aren't real attacks and I don't want them to populate on the map. </b>  <br/>
 </p>
 
-![sourcehost_wouldnt_update_2](https://user-images.githubusercontent.com/108043108/225453156-97d87269-6ba8-4576-8693-c44fb704f2cd.JPG)
-![sourcehost_wouldnt_update_2](https://user-images.githubusercontent.com/108043108/225453165-02413336-b8bc-466c-8468-88b48f8a7fa5.JPG)
 ![setting_geomap_5](https://user-images.githubusercontent.com/108043108/225453225-24b50358-ac8c-4897-9e44-8d21f4075239.JPG)
 
 <br />
