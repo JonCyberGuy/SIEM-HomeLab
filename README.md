@@ -243,52 +243,60 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b>A comparison between scans to show the progression of alerts and vulnerabilities.</b>  <br/>
+<b>I wait a little while to see if the fields would populate properly. They all do except sourcehost.CL and I couldn't figure out why. I deleted that field and extracted it multiple times but no matter what I did it would not populate. I could not use an unpopulated field in my sentinel live map, so in the end I decided to delete it and not use that data point at all.</b>  <br/>
 </p>
 
-![Vulnerability_Comparison](https://user-images.githubusercontent.com/108043108/177890918-c2fc7078-34b9-4120-a430-f096169ae177.jpg)
+![Sourcehost_wouldnt_update](https://user-images.githubusercontent.com/108043108/225451005-edabe896-94b1-4d11-8853-42e4a4ce8e83.JPG)
+![sourcehost_wouldnt_update_2](https://user-images.githubusercontent.com/108043108/225451011-80b1dbad-2e90-4407-bfa5-5c516b66a991.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>Showing what some of the alerts and vulnerabilites look like. We can see most of the Critical alerts are just from Firefox. A few ways we can remediate some of the vulnerabilities is by either Updated Firefox, which will probably remediate a lot of them, or we can simply delete Firefox.</b>  <br/>
+<b>The next step taken was to begin setting up my geomap that will pinpoint and map out where the attacks, or login attempts were coming from. I do this by navigating to Microsoft Sentinel. In the first picture we can see that the SIEM has been collecting data properly and categorizing it. I did not set any alerts for this project but it was certainly possible, maybe for a future video. We can see in this picture that there are nearly 10k events and 6.9k security events, coming from Event Viewer in the VM with 2.3k failed RDP attempts. I haven't even finished setting up this project but the person from Tunisia was hard at work trying to brute force into my VM. Good luck ha ha ha!</b>  <br/>
 </p>
 
-![Showing_Vulnerabilities](https://user-images.githubusercontent.com/108043108/177891162-cf86e335-0539-4f9f-abb2-7150b482e689.gif)
+![Setting_Geomap](https://user-images.githubusercontent.com/108043108/225451297-e0c57af2-5333-4b6f-8fff-79b11b816e77.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>To start the process of remediating vulnerabilities, I elect to just delete Firefox. That will instantly fix a lot of these issues.</b>  <br/>
+<b>Moving on. To create the map I want I'll need to create a new workbook in Sentinel. After clicking into workbooks, there is some default graphs or widgets in there. I want to delete those. After deleting those I then get started on creating a new workbook.</b>  <br/>
 </p>
 
-![Fixing_Vulnerabilities_Uninstall_Firefox](https://user-images.githubusercontent.com/108043108/177891363-17bdc0ea-c872-434f-95a6-4bf6e4694ddf.JPG)
+![setting_geomap_2](https://user-images.githubusercontent.com/108043108/225452457-2c805584-bee1-4c4b-adb3-aa73726c0d0f.JPG)
+![setting_geomap_3](https://user-images.githubusercontent.com/108043108/225452473-99fd3ef3-04ff-49e6-aecf-94793b7e60f2.JPG)
+![setting_geomap_4](https://user-images.githubusercontent.com/108043108/225452571-ef8a7a55-a541-44ba-9269-24a32d56d14c.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>To remediate the Windows vulnerabilities, I choose to update Windows. This version is old so it takes a few restarts to get it up to date.</b>  <br/>
+<b>To create the map I need to add a query. Remember, I need to query the data and the fields from Log Analytics. Basically I'm pointing out the dataset I want Microsoft Sentinel to use. In the query I tell it to specifically exclude (!=) the data points that include "Samplehost" since those aren't real attacks and I don't want them to populate on the map. </b>  <br/>
 </p>
 
-![Remediating_Vulnerabilities_Updating_WIndows_1](https://user-images.githubusercontent.com/108043108/177891464-75d2b603-cadf-4923-bc1f-61409b11169d.gif)
-
-![Remediating_Vulnerabilities_Updating_Windows](https://user-images.githubusercontent.com/108043108/177891436-a7b26e21-8376-4650-aaee-aaf4bc2e451e.JPG)
+![sourcehost_wouldnt_update_2](https://user-images.githubusercontent.com/108043108/225453156-97d87269-6ba8-4576-8693-c44fb704f2cd.JPG)
+![sourcehost_wouldnt_update_2](https://user-images.githubusercontent.com/108043108/225453165-02413336-b8bc-466c-8468-88b48f8a7fa5.JPG)
+![setting_geomap_5](https://user-images.githubusercontent.com/108043108/225453225-24b50358-ac8c-4897-9e44-8d21f4075239.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>After a few restarts, Windows is finally up to date. I run one more Nessus scan to find if the steps I took to remediate some of the alerts worked.</b>  <br/>
+<b>After I queried the data points I want, I now have to choose how I want to express/visualize them. In this case I want them visualized as a map! I choose the map setting and then configure the map to plot the attacks by latitude/longitude. I could do it by country but some of the attacks coming through was not including the country. I change the metric settings to make the bubbles bigger using the event counts. The more events the bigger the bubble. I apply the settings and my map is done!</b>  <br/>
 </p>
 
-![VM_Up_To_date](https://user-images.githubusercontent.com/108043108/177891501-767d6764-8e4a-4bd0-85cc-6b70e48c62aa.JPG)
+![setting_geomap_6](https://user-images.githubusercontent.com/108043108/225453707-62496864-0c33-4d3d-988c-3260b07e9c9b.JPG)
+![setting_geomap_7](https://user-images.githubusercontent.com/108043108/225454149-b35a2412-574f-474a-acca-3b541148208a.JPG)
+![setting_geomap_8](https://user-images.githubusercontent.com/108043108/225454159-593b96e9-e6dc-4cbc-b6fa-bcb955495bfd.JPG)
+
 
 <br />
 <br />
 <p align="center">
-<b>Here is a final comparison between the four scans I took while doing this lab. The last picture is the after remediation scan. There we can see a lot of the vulnerabilities that were being alerted are gone! Still a 1 critical but I'll remediate that another time!</b>  <br/>
+<b>After a few hours and right before I decided to stop the project, you can see that there was a total of 10,529 attacks or failed login attempts. 20 were in the USA which was me testing the PowerShell script, 9 from Cambodia, and a whopping 10.5k from Tunisia. They were using automated brute-forcing software to try thousands of different password combinations and usernames. There was even more attempts but my PowerShell script had to be stopped and started multiple times. This is why it's important to use strong passwords and uncommon usernames! The second picture is the number of API calls I had that day.</b>  <br/>
 </p>
 
-![After_Vulnerability_Remediation](https://user-images.githubusercontent.com/108043108/177891719-3066c9bb-38dd-4b10-b8bb-6f9dd8a45a09.JPG)
+![Stopped_Because_of_API_Calls_Limit_At_150k](https://user-images.githubusercontent.com/108043108/225454550-20b2f3d6-5593-44cf-8bbc-290fb941da8c.JPG)
+![API_requests](https://user-images.githubusercontent.com/108043108/225455054-0576753d-b3d0-40dd-aa4b-70246b1616e8.JPG)
+
 
 <br />
 <br />
