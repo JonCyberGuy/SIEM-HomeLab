@@ -51,7 +51,7 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <br />
 <br />
 <p align="center">
-<b>I scroll down on that same page and I now have to choose the size of the VM I'm going to provision. In the photo I initially chose Standard_B1s, as circled in green. Later on I decided to upgrade it to Standard_B2s which gave 2 CPU cores instead of 1 and more RAM. The first one I chose was just too slow. PowerShell kept crashing and the VM was lagging a lot. After choosing the size of the VM I create the Admin account. I chose a unique admin name and a 30 character password made up of special characters, numbers, and a mix of lowercase and uppercase letters. Since I knew people would be trying to log into the exposed VM, most likely through brute forcing and dictionary attacks a strong password was a necessity. The public inbound port rules, essentially which ports will be open to be able to connect to the VM. At this step you can set mutltiple authentication methods like SSH but I chose to only allow RDP.</b> <br/>
+<b>I scroll down on that same page and I now have to choose the size of the VM I'm going to provision. In the photo I initially chose Standard_B1s, as circled in green. Later on I decided to upgrade it to Standard_B2s which gave 2 CPU cores instead of 1 and more RAM. The first one I chose was just too slow. PowerShell kept crashing and the VM was lagging a lot. After choosing the size of the VM I create the Admin account. I chose a unique admin name and a 30 character password made up of special characters, numbers, and a mix of lowercase and uppercase letters. Since I knew people would be trying to log into the exposed VM, most likely through brute forcing and dictionary attacks a strong password was a necessity. The public inbound port rules, essentially which ports will be open to be able to connect to the VM. At this step you can set mutltiple authentication methods like SSH but I chose to only allow RDP. RDP uses port 3389.</b> <br/>
 </p>
 
 ![Create_VM_3](https://user-images.githubusercontent.com/108043108/225365594-cf2fe158-d887-4bf9-aca6-d423019404a6.jpg)
@@ -118,50 +118,47 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <br />
 <br />
 <p align="center">
-<b>I launch the newlyggggn and it immediately goes to work scanning for any known vulnerabilities. When the grey checkmark appears, the scan is complete.</b> <br/>
+<b>Now that everything is set up in the Azure dashboard, I can go into my VM and set setting things up there. The first thing I need to do is get my VM's public IP address so I can Remote Desktop (RDP) into it. I go into the Virtual Machines tab in Azure and navigate into the HoneyPot VM. Highlighted in my VM's Public IP.</b> <br/>
 </p>
 
-![Launch_newly_created_scan](https://user-images.githubusercontent.com/108043108/177888041-95c53001-b8d2-4355-9311-3ee2637dff94.JPG)
-
-![Scan_Running](https://user-images.githubusercontent.com/108043108/177888049-661dddfc-ebe0-42cf-ad87-14bc5af53fe5.gif)
-
-![Scan_Completed](https://user-images.githubusercontent.com/108043108/177888068-25d4a86a-c150-4e77-a993-9df4178c5ba1.JPG)
+![Getting_VM_Public_IP](https://user-images.githubusercontent.com/108043108/225379998-5bcad4c5-c878-4249-8384-34e1581dc35d.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>Lets look at the results! It is showing 33 results, 32 of which are info and 1 low. If this was an actual production environment these most likely would be left alone. The Info results are probably because some things don't have proper credentials and are not essentially vulnerabilities</b> <br/>
+<b>From here I can log into my VM via Remote Desktop. I open up Remote Desktop on my native PC, enter the public IP address and credentials needed and connect in! I configure the HoneyPot a bit.</b> <br/>
 </p>
 
-![Results_Of_Scan](https://user-images.githubusercontent.com/108043108/177888196-3141c52f-df79-4c58-9fee-5daa68d78c5b.gif)
+![Connect_With_RDP](https://user-images.githubusercontent.com/108043108/225381141-3514bcc6-3417-4281-ad67-1b4af20edfd5.JPG)
+![Logging_Into_VM_Via_RDP](https://user-images.githubusercontent.com/108043108/225381164-d6591c73-4cf0-4fee-85c9-22d56abfc8ab.JPG)
+
 
 <br />
 <br />
 <p align="center">
-<b>Looking at one of the INFO results you can see that the Target Credential Status By Authentication Procotol was triggered because we did not actually provide any credentials for this scan.</b> <br/>
+<b>After I'm successfully logged into the VM via RDP, I navigate to Event Viewer. Event Viewer logs everything that goes on in a windows system. It gives each action an EventID so it can be more easily navigated or browsed by the EventID. For this project we are concerned specifically with EventID 4625, which is Failed Logon Attempts. These logs can be found in the Security tab. In the pictures below, I run another instance of Remote Desktop and try to log into the VM with the wrong password. This creates a failed logon attempt which is then logged and recorded in Event Viewer.</b> <br/>
 </p>
 
-![No_credentials_Given](https://user-images.githubusercontent.com/108043108/177888648-5679c8c1-e8ce-47e3-a424-067375964054.JPG)
+![Event_Viewer](https://user-images.githubusercontent.com/108043108/225381724-2603d72a-5334-479d-b555-c1d0baaeb875.JPG)
+![Event_Viewer_2](https://user-images.githubusercontent.com/108043108/225381737-0bc2d129-b045-4099-a5fe-d34b4d43f673.JPG)
+
 
 <br />
 <br />
 <p align="center">
-<b>Next thing I do is configure the VM to be able to accept authenticated scans and provide credentials to Nessus. I will then rescan the VM and compare the results. I go to services.MSC to start this process and enable Remote Registry. This will allow Nessus to connect to the VM's registry and properly scan for vulnerabilities such as insecure connections or deprecated cipher suites. I'm following these steps from Nessus and what they recommend to actually do credentialed scans. There might be a better way to do this.</b> <br/>
+<b>The next step is the ping the VM from my native computer. I do this to see if I can make a direct connection to the VM and see if it is currently discoverable. It is not. That is because the VM has Windows Defender Firewall activated. The firewall is blocking ICMP Echo Requests, making the VM undiscoverable. I know this because I pinged the VM's public IP address which is 74.235.173.155 and I see Request timed out a few times. The firewall is dropping the ICMP request packets.</b> <br/>
 </p>
 
-![Services_MSC](https://user-images.githubusercontent.com/108043108/177888931-9dbd1224-5155-4129-ba09-4f495976a0e2.JPG)
-
-![Enabling_Remote_Registry](https://user-images.githubusercontent.com/108043108/177889042-0a885e18-bf64-4390-8f43-454bdaf79004.gif)
+![Ping_VM](https://user-images.githubusercontent.com/108043108/225383503-2a599790-511e-47ec-b858-4055f42ead0c.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>From there I go to User Account Controls and disable it. I have to do this because this VM is not on a domain so I kind of have to do hacker stuff to get it to work properly. I would never do this in an actual organization or production environment.</b> <br/>
+<b>To make sure that everyone on the internet can discover my VM I need to disable the windows firewall. I do this by going into the windows search bar and searching wf.msc. Once inside the windows firewall, I begin disabling everything. I then open up CMD in my native computer and try to ping the VM again. This time it receives replies from the VM because the firewall is no longer blocking ICMP requests.</b> <br/>
 </p>
 
-![user_account_Settings](https://user-images.githubusercontent.com/108043108/177889466-907890fc-e67e-490b-8a17-b335263d0359.JPG)
-
-![User_Account_settings_configuration](https://user-images.githubusercontent.com/108043108/177889473-ba988135-ce62-4717-bf04-1e426ec8c4b6.gif)
+![Turn_Off_Firewall](https://user-images.githubusercontent.com/108043108/225385096-6cdeaa2a-3411-46fa-bad1-0afcee031860.JPG)
+![Turn_Off_Firewall_2](https://user-images.githubusercontent.com/108043108/225385112-d4ada032-3cdc-4650-b60a-0a373cddfd17.JPG)
 
 <br />
 <br />
