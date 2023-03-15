@@ -7,7 +7,7 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <h2>Utilities Used</h2>
 
 - <b>Microsoft Sentinel (SIEM)</b> 
-- <b>Log Analytics Workbooks</b>
+- <b>Log Analytic Workbooks</b>
 - <b>Microsoft Defender for Cloud</b>
 - <b>Vitural Machines</b>
 - <b>Remote Desktop</b>
