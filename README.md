@@ -1,12 +1,12 @@
-<h1>Azure Sentinel Live Attack Demonstration Home Lab</h1>
+<h1>Microsoft Sentinel Live Attack Demonstration Home Lab</h1>
 
 <h2>Description</h2>
-This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Azure Sentinel. This project will showcase the use of a few different tools and resources. I will be using PowerShell to scan EventViewer in the exposed VM, specifically eventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address from any failed logons to IPgeolocation.io via an API, so later that information can be used Azure Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, API's, and Microsoft Azure.I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.
+This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Microsoft Sentinel. This project will showcase the use of a few different tools and resources. I will be using PowerShell to scan EventViewer in the exposed VM, specifically eventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address from any failed logons to IPgeolocation.io via an API, so later that information can be used Microsoft Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, API's, and Microsoft Azure.I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.
 <br />
 
 <h2>Utilities Used</h2>
 
-- <b>Azure Sentinel</b> 
+- <b>Microsoft Sentinel (SIEM)</b> 
 - <b>Log Analytics Workbooks</b>
 - <b>Microsoft Defender for Cloud</b>
 - <b>Vitural Machines</b>
@@ -88,34 +88,37 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <br />
 <br />
 <p align="center">
-<b>Now that the VM's firewall is disabled, I try to Ping it again from my native PC and this time it is successful.</b> <br/>
+<b>I now go into Microsoft Defender for Cloud. I do this because I have to provision enroll in some plans to be able to collect and aggregate data for Microsoft Sentinel to be able to use later on. I also need to connect my HoneyPot-VM to Microsoft Defender so it can collect data. At this point my VM has been created so it can be connected to these services. We call these Data Connectors. In the third picture I only turn on the plans for Foundational CSPM and Servers. I'm not running any SQL servers so it doesn't need to be turned on.</b> <br/>
 </p>
 
-![Ping_works](https://user-images.githubusercontent.com/108043108/177887412-f8078e7b-13a3-4480-b000-5ae84108cfab.JPG)
-
-<br />
-<br />
-<p align="center">
-<b>By this time Nessus Essentials successfully downloads. The first thing I want to do is create a new scan, then select Basic Network Scan.</b> <br/>
-</p>
-
-![Create_New_Scan](https://user-images.githubusercontent.com/108043108/177887661-793476e8-7e68-4c21-8983-8f955d7cff2e.JPG)
-
-![basic_network_scan](https://user-images.githubusercontent.com/108043108/177887672-2d955508-edf1-4735-b78a-2836a81d2c9f.JPG)
+![Microsoft_Defender](https://user-images.githubusercontent.com/108043108/225375649-d2e6bfc2-92d7-4193-af26-3526bf646744.JPG)
+![Microsoft_Defender_2](https://user-images.githubusercontent.com/108043108/225375660-7f554560-6568-4265-a6b1-c5d6f7802774.JPG)
+![Microsoft_Defender_3](https://user-images.githubusercontent.com/108043108/225375671-a99097cf-e19e-4037-98b6-a4f4c710eb94.jpg)
+![Microsoft_Defender_4](https://user-images.githubusercontent.com/108043108/225375684-4825f9d7-a26d-4eb4-a477-ba3aa0b6a9b1.JPG)
 
 
 <br />
 <br />
 <p align="center">
-<b>The newly created scan asks me to name the scan and select a target to scan. I configure it to scan the VM's IP address which is 192.168.50.185</b> <br/>
+<b>Since my VM was created, I can go back into Log Analytics Workspaces and connect my VM to that service as well.</b> <br/>
 </p>
 
-![Scan_VM_IP](https://user-images.githubusercontent.com/108043108/177887914-87a2da10-be51-481c-a672-ec1104e3df7a.JPG)
+![Connect_VM_To_LAW](https://user-images.githubusercontent.com/108043108/225376430-5bb177f2-a2e9-4faa-ab8b-64bd23625407.JPG)
+![Connect_VM_to_LAW_2](https://user-images.githubusercontent.com/108043108/225376446-e56ef573-901b-4d52-824d-529dad6a53d5.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>I launch the newly created scan and it immediately goes to work scanning for any known vulnerabilities. When the grey checkmark appears, the scan is complete.</b> <br/>
+<b>I can now create a Microsoft Sentinel resource and connect it to my VM. </b> <br/>
+</p>
+
+![Azure_Sentinel](https://user-images.githubusercontent.com/108043108/225377514-f5462e65-4b40-4823-a613-7088cfeff63a.JPG)
+![Azure_Sentinel_2](https://user-images.githubusercontent.com/108043108/225377521-f4d379cf-58d7-4aca-aee0-1a80cb9aceac.JPG)
+
+<br />
+<br />
+<p align="center">
+<b>I launch the newlyggggn and it immediately goes to work scanning for any known vulnerabilities. When the grey checkmark appears, the scan is complete.</b> <br/>
 </p>
 
 ![Launch_newly_created_scan](https://user-images.githubusercontent.com/108043108/177888041-95c53001-b8d2-4355-9311-3ee2637dff94.JPG)
