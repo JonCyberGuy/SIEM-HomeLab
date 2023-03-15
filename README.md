@@ -194,7 +194,8 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 </p>
 
 ![Showing_PS_Script_Someone_Already_Found_VM](https://user-images.githubusercontent.com/108043108/225413356-343d9ae2-240d-4841-b41f-62cff77e51ab.JPG)
-<a href="https://gyazo.com/65b3052eeda2245482c141f6eb882a22"><img src="https://i.gyazo.com/65b3052eeda2245482c141f6eb882a22.gif" alt="Image from Gyazo" width="1600"/></a>
+
+https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9-9bd4-dcd7ca816a33.mp4
 
 <br />
 <br />
