@@ -1,7 +1,7 @@
 <h1>Microsoft Sentinel Live Attack Demonstration Home Lab</h1>
 
 <h2>Description</h2>
-This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Microsoft Sentinel. This project will showcase the use of a few different tools and resources. I will be using PowerShell to scan EventViewer in the exposed VM, specifically eventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address from any failed logons to IPgeolocation.io via an API, so later that information can be used Microsoft Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, API's, and Microsoft Azure.I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.
+This is a walkthrough of how I used Microsoft Azure and created a virtual machine in the cloud running Windows 10. I exposed a VM to the internet and used Azure Log Analytics Workspace, Microsoft Defender for Cloud, and Azure Sentinel to collect and aggregate the attack data and display it on a map in Microsoft Sentinel. This project will showcase the use of a few different tools and resources. I will be using PowerShell to scan EventViewer in the exposed VM, specifically EventID 4625 which is failed logon attempts, and send that data to a logfile. The PowerShell Script also sends the IP address from any failed logons to IPgeolocation.io via an API, so later that information can be used Microsoft Sentinel to map where the logon attempts originated from. This project was done to gain experience with SIEMs, cloud concepts and resources, API's, and Microsoft Azure.I learned how to provision and configure resources in the cloud, how to read SIEM logs and much more. This was a fun project and I hope anyone reading this appreciates the work that went into this project.
 <br />
 
 <h2>Utilities Used</h2>
@@ -163,40 +163,38 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 <br />
 <br />
 <p align="center">
-<b>Then I'm going to open the registry and add a key that is suppose to allow Nessus to connect in by further disabling user account controls.</b> <br/>
+<b>Now that my VM is exposed to the internet I can begin the setup of my PowerShell script. It is the heart of this project. This PowerShell script will parse Event Viewer specifically looking for EventID 4625. It will then send the IP address from the failed logon attempts to the website IPgeolocation.io via an API. The reason I did this is because the IP address in event viewer does not contain any geographical location. It was easier to send the data to a system dedicated to pulling that information out and sending it back to myself rather than building it from scratch. The PowerShell script will then receive all that georgraphical data and save it as a string in a logfile named failed_rdp.log. I will use this logfile later on in the project to be able to map the attacks live in Microsoft Sentinel.</b> <br/>
 </p>
 
-![Registry_editor](https://user-images.githubusercontent.com/108043108/177889663-24088363-2291-4af0-8ea9-6f6486fc82ad.JPG)
+![Create_PS_Script](https://user-images.githubusercontent.com/108043108/225409638-0f9735a1-eca0-446f-afb7-74ef0d427ebf.JPG)
+
 
 <br />
 <br />
 <p align="center">
-<b>Now I navigate the Registry to the file that Nessus instructs us to (highlighted Yellow in the search bar) and I have to add a DWORD value and name it LocalAccountTokenFilterPolicy and give it a value of 1. </b> <br/>
+<b>After I open PowerShell I paste my previously written script. I then save that script to the desktop as Log_Exporter</b> <br/>
 </p>
 
-![Creating_a_new_DWORD](https://user-images.githubusercontent.com/108043108/177889894-f94747fa-fa05-401f-82d4-1c9ec9faa57f.JPG)
-
-![DWORD_name](https://user-images.githubusercontent.com/108043108/177889904-aa294428-0864-4018-8cb5-b61da5e65478.JPG)
-
-![Edit_DWORD](https://user-images.githubusercontent.com/108043108/177889915-70e9814c-5167-460c-be85-10abf056fd8f.JPG)
+![Create_PS_Script_2](https://user-images.githubusercontent.com/108043108/225410802-01a83b34-e79a-4516-8bdb-70c01baa76d7.JPG)
+![Create_PS_Script_3](https://user-images.githubusercontent.com/108043108/225410821-7078f7c1-1928-49c4-8e03-a123ef43cb3f.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>After doing that I have to restart the VM so the changes can take effect.</b> <br/>
+<b>I run my Log_Exporter script. So that it was easier to read I made it so that the script outputs in pink and black. The API_KEY you see has been changed after I finished the project. In the first photo you can see that my script is working just fine. The output you see is the first failed login that I did earlier. The second photo is showing how the data is saved into the failed_rdp logfile in string format. I included some sample data in this file because later on it will be needed to train the AI in Log Analytics Workbooks and Microsoft Sentinel. More data equals more precision.</b> <br/>
 </p>
 
-![Restart_The_VM](https://user-images.githubusercontent.com/108043108/177889955-2511a00a-9b59-4b4d-a9be-c2abda9869a6.JPG)
+![Run_PS_Script](https://user-images.githubusercontent.com/108043108/225412357-ee390c08-c131-4658-b6d0-b2c6f0485850.JPG)
+![Training_Sentinel](https://user-images.githubusercontent.com/108043108/225412372-30c65d96-6678-4ac1-a3a9-d0f3d8331342.JPG)
 
 <br />
 <br />
 <p align="center">
-<b>With the registry configured, it is now time to go back into Nessus and configure the scan I created. I have to add the Credentials to the scan so it can work properly. The credentials I'm talking about is the username and password of the VM. This will allow Nessus to use those credentials in places where it is required in the VM registry.</b> <br/>
+<b>At this point to test if the PowerShell script is working, I failed another logon attempt. As you can see someone has already found my VM and started to try and bruteforce it. This person was in Tunisia. They found it so fast, it was a bit annoying. I could have blocked his IP or enabled the firewall again until I was finished completely with my setup but this data was perfect to train the AI in Azure, so I let it go at the time. In hindsight it was a bad move. The free API from IPgeolocation.io only allowed for 1000 calls. This person in Tunisia hit that limit very quickly, ruining my project. I had to pay $15 for an extra 150k API calls to save my project.</b> <br/>
 </p>
 
-![Configure_Nessus](https://user-images.githubusercontent.com/108043108/177890138-e6420231-4ce8-4a2d-99fb-e1e992da6ebb.JPG)
-
-![Adding_Credentials](https://user-images.githubusercontent.com/108043108/177890151-27496a20-72b8-4763-8c82-368a06a15d3f.gif)
+![Showing_PS_Script_Someone_Already_Found_VM](https://user-images.githubusercontent.com/108043108/225413356-343d9ae2-240d-4841-b41f-62cff77e51ab.JPG)
+<a href="https://gyazo.com/65b3052eeda2245482c141f6eb882a22"><img src="https://i.gyazo.com/65b3052eeda2245482c141f6eb882a22.gif" alt="Image from Gyazo" width="1600"/></a>
 
 <br />
 <br />
