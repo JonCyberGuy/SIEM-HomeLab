@@ -13,7 +13,7 @@ This is a walkthrough of how I used Microsoft Azure and created a virtual machin
 - <b>Remote Desktop</b>
 - <b>PowerShell</b>
 - <b>API's</b>
-- <b>EventViewer</b>
+- <b>Event Viewer</b>
 - <b>Firewalls</b>
 
 <h2>Environments Used </h2>
