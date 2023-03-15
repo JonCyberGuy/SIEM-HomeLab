@@ -222,7 +222,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b> While that is creating, which the creation will be instant, but the data won't be synced from the VM to Log Analytics for a while. I decide to query the Event Viewer, which should have already been synced. You can see in picture 1 that it is indeed showing all the logs. After a little while I decide to query the newly created FAILED_RDP_WITH_GEO custom log, and it is indeed showing information meaning that the VM and Log Analytics as synced and is sending/receiving data.</b><br/>
+<b>While that is creating, which the creation will be instant, but the data won't be synced from the VM to Log Analytics for a while. I decide to query the Event Viewer, which should have already been synced. You can see in picture 1 that it is indeed showing all the logs. After a little while I decide to query the newly created FAILED_RDP_WITH_GEO custom log, and it is indeed showing information meaning that the VM and Log Analytics as synced and is sending/receiving data.</b><br/>
 </p>
 
 ![Security_Event_4625](https://user-images.githubusercontent.com/108043108/225425000-75d4b1ae-fa60-48a4-af30-8fc5ab52cb8f.JPG)
@@ -231,7 +231,7 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 <br />
 <br />
 <p align="center">
-<b></b>Now I have to go in and actually extract the fields my log uses. This will allow me to later use those fields in Microsoft Sentinel. I right click a failed rdp login log that has all the raw data in it from my PowerShell script and highlight the data I want. I then name the field that data is going to be in. Once that extraction happens, the Log Analytics AI looks at all of my other sample data and actual logs that were generated and sees if it can pull the correct data. This part is where I have to go in and correct any errors the AI has but again highlighting the correct data point it needs to look for.<br/>
+<b>Now I have to go in and actually extract the fields my log uses. This will allow me to later use those fields in Microsoft Sentinel. I right click a failed rdp login log that has all the raw data in it from my PowerShell script and highlight the data I want. I then name the field that data is going to be in. Once that extraction happens, the Log Analytics AI looks at all of my other sample data and actual logs that were generated and sees if it can pull the correct data. This part is where I have to go in and correct any errors the AI has but again highlighting the correct data point it needs to look for.</b><br/>
 </p>
 
 ![Extract_Fields](https://user-images.githubusercontent.com/108043108/225436517-0a82f48e-82c8-45cf-b351-634ee8ba41c7.JPG)
