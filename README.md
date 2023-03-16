@@ -9,7 +9,7 @@
 - <b>Microsoft Sentinel (SIEM)</b> 
 - <b>Log Analytic Workbooks</b>
 - <b>Microsoft Defender for Cloud</b>
-- <b>Vitural Machines</b>
+- <b>Virtual Machines</b>
 - <b>Remote Desktop</b>
 - <b>PowerShell</b>
 - <b>API's</b>
