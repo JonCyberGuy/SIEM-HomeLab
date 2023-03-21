@@ -305,6 +305,59 @@ https://user-images.githubusercontent.com/108043108/225419861-a5c9bce1-3f6d-42e9
 ![Deleting_Resources](https://user-images.githubusercontent.com/108043108/225455713-94e78229-b9ec-4f2e-ae17-24ed2636f7a1.jpg)
 ![deleting_resources_2](https://user-images.githubusercontent.com/108043108/225455718-29980ca4-9976-4abf-955f-573f6d55fdd9.JPG)
 
+<br />
+<br />
+<h2 align="center">Decided To Run The Lab Again.</h2>
+</p>
+
+<br />
+<br />
+<p align="center">
+<b>I decided to do the lab again. I wanted to give attackers more time to attack the exposed VM so more locations could be represented on the world map. My decision paid off. I’m very happy that this time a more diverse group of threat actors decided to attack my VM, which resulted in this version of the world map.</b>  <br/>
+</p>
+
+![worldmap2](https://user-images.githubusercontent.com/108043108/226672121-d80091a0-6f7b-4f1d-b5bd-d9416823c6bf.JPG)
+
+<br />
+<br />
+<p align="center">
+<b>I noticed an issue while running this lab a second time. Periodically my PowerShell script would stop updating. It was still running, but no new entries would be generated for 5 – 15 minutes. I thought that was strange. I knew for a fact there were many different countries attempting to brute-force their way into the VM, so there should be a steady stream of new entries. Especially because I set the refresh rate in this PS script to 300 Milliseconds, down from 1 second in the earlier lab. I decided to investigate what was happening. The first step in my investigation was to compare the number of security events where Event ID = 4625 against the number of Failed_RDP_Custom_Log’s generated. I accomplish this by writing queries in Log Analytics Workbook.</b>  <br/>
+</p>
+
+![Security_Event_ID](https://user-images.githubusercontent.com/108043108/226673169-7b2f64a3-7ab1-4918-98e8-b680a553aabf.jpg)
+<p align="center"><i>After writing my query we can see here that there was a total of 9282 EventID 4625 Security Events. This means that threat actors attempted to log into my VM 9282 times.</i></p>  <br/>
+
+![Failed_RDP_Log](https://user-images.githubusercontent.com/108043108/226673194-787f3452-309d-4d0b-a375-c653fb16c4b1.JPG)
+<p align="center">
+<i>After writing this query we can see it returned a total of 3892 records, which means that my Custom Log only captured 3892 login attempts. Quite a bit away from 9282.</i>
+</p>
+
+<br />
+<br />
+<p align="center">
+<b>Okay, there is a discrepancy here. Both of those number of records should match, or at least be very close to each other. Next I decided to look at my API usage for today. It shows 3541 API requests. It's much closer to my Custom Log FAILED_RDP_CUSTOM_LOG. So now I know it isn't my VM that is failing to send the data to my custom log.</b>  <br/>
+</p>
+
+![API](https://user-images.githubusercontent.com/108043108/226676332-d906603b-59c1-4ad0-94c0-fb665bb26a73.JPG)
+
+<br />
+<br />
+<p align="center">
+<b>Lastly, I chose to go into Microsoft Sentinel and see what the dashboard is showing. My PowerShell Script was still running in the background so the numbers aren't an exact match because these screenshots were taken a few minutes apart. Again, it is showing a number (4,100) that is much closer to the FAILED_RDP_CUSTOM_LOG query.</b>  <br/>
+</p>
+
+![Sentinel](https://user-images.githubusercontent.com/108043108/226676717-a08eb2c2-6ae1-46f7-8d78-7359b2d610bf.JPG)
+
+<br />
+<br />
+<h2 align="center">Conclusions</h2>
+
+<br />
+<br />
+<p align="center">
+<b>What I suspect is happening is that the Windows Event Viewer is working just fine. It is properly logging ALL login attempts and is showing the actual number of attempts that has happened. The weak link in this problem is the PowerShell script. The reason my PowerShell script was pausing for extended amounts of time is because it was being overwhelmed. I set the refresh rate to 300 Milliseconds, but the actual login attempts from several different attackers was much more than 1 attempt per 300 Milliseconds. My PowerShell script was a bottleneck. If it could record each attempt as it happened, it would show the actual number of attempts and be in line with Event Viewer. It could only record 1 attempt per 300 Milliseconds, so some login attempts were being lost or backlogged (I doubt it was backlogged), which lead to the discrepancy we are seeing. Perhaps in the future I could lower the refresh rate even more to allow more login attempts to go through.</b>  <br/>
+</p>
+
 
 <br />
 <br />
