@@ -21,6 +21,10 @@
 - <b>Microsoft Azure</b>
 - <b>Windows 10</b> (21H2)
 
+<h2>Links</h2>
+
+- <b>Microsoft Azure Free Trial:</b> https://azure.microsoft.com/en-us/free/
+
 <h2 align="center">Program walk-through</h2>
 
 <p align="center">
