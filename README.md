@@ -24,6 +24,7 @@
 <h2>Links</h2>
 
 - <b>Microsoft Azure Free Trial:</b> https://azure.microsoft.com/en-us/free/
+- <b>IPGeolocation:</b> https://ipgeolocation.io/
 
 <h2 align="center">Program walk-through</h2>
 
@@ -159,7 +160,7 @@
 <br />
 <br />
 <p align="center">
-<b>To make sure that everyone on the internet can discover my VM I need to disable the windows firewall. I do this by going into the windows search bar and searching wf.msc. Once inside the windows firewall, I begin disabling everything. I then open up CMD in my native computer and try to ping the VM again. This time it receives replies from the VM because the firewall is no longer blocking ICMP requests.</b> <br/>
+<b>To make sure that everyone on the internet can discover my VM I need to disable the windows firewall. I do this by going into the windows search bar and searching wf.msc. Once inside the windows firewall, I begin disabling everything. I then open up CMD in my native computer and try to ping the VM again. This time it receives replies from the VM because the firewall is no longer blocking ICMP requests. </b> <br/>
 </p>
 
 ![Turn_Off_Firewall](https://user-images.githubusercontent.com/108043108/225385096-6cdeaa2a-3411-46fa-bad1-0afcee031860.JPG)
@@ -177,7 +178,7 @@
 <br />
 <br />
 <p align="center">
-<b>After I open PowerShell, I paste my script that was written before the start of this project. I then save that script to the desktop as Log_Exporter</b> <br/>
+<b>After I open PowerShell, I paste my script that was written before the start of this project. I then save that script to the desktop as Log_Exporter. At this point you should go and make a profile on IpGeolocation to get your API. You'll paste your own API into the PS script. You'll get 1000 free calls, but they can go fairly quickly, so I recommend going back into the Windows Firewall settings and turning them back ON until you're done setting up your Log Analytics Workbooks Custom Fields later on in the lab. After those are configured, you can then turn off the Firewall.</b> <br/>
 </p>
 
 ![Create_PS_Script_2](https://user-images.githubusercontent.com/108043108/225410802-01a83b34-e79a-4516-8bdb-70c01baa76d7.JPG)
